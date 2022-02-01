@@ -20,6 +20,11 @@ void AddEvent::setCurrentUser(QString user)
     currentUser = user;
 }
 
+void AddEvent::setDate(QDate date)
+{
+    this->date = date;
+}
+
 void AddEvent::setUpProducts()
 {
     std::vector<QString> products = dbService->getProducts();
@@ -38,6 +43,7 @@ void AddEvent::setUpActions()
 void AddEvent::on_buttonBox_accepted()
 {
    dbService->addEvent(currentUser,
+                       date,
                        ui->productComboBox->currentText(),
                        ui->actionComboBox->currentText(),
                        ui->startTimeEdit->time(),

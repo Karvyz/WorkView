@@ -30,7 +30,7 @@ public:
     void addUser(QString name);
     void addProduct(QString name);
     void addAction(QString name);
-    void addEvent(QString userName, QString productName, QString actionName, QTime startTime, QTime endTime);
+    void addEvent(QString userName, QDate date, QString productName, QString actionName, QTime startTime, QTime endTime);
 };
 
 #endif // DBSERVICE_H

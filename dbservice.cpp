@@ -156,17 +156,19 @@ void DbService::addAction(QString name)
     query.bindValue(":name", name);
     query.exec();
 }
-void DbService::addEvent(QString userName, QString productName, QString actionName, QTime startTime, QTime endTime)
+void DbService::addEvent(QString userName, QDate date, QString productName, QString actionName, QTime startTime, QTime endTime)
 {
     qDebug() << endTime;
     QSqlQuery query;
-    query.prepare("INSERT INTO Activities(userID, productID, actionID, startTime, endTime)"
+    query.prepare("INSERT INTO Activities(userID, date, productID, actionID, startTime, endTime)"
                   " VALUES((SELECT ID FROM Users WHERE name= :userName),"
+                  ":date,"
                   "(SELECT ID FROM Products WHERE name= :productName),"
                   "(SELECT ID FROM Actions WHERE name= :actionName),"
                   ":startTime,"
                   ":endTime)");
     query.bindValue(":userName", userName);
+    query.bindValue(":date", date.toString("yyyy-MM-dd"));
     query.bindValue(":productName", productName);
     query.bindValue(":actionName", actionName);
     query.bindValue(":startTime", startTime.toString("hh:mm:ss"));

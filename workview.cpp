@@ -52,6 +52,7 @@ void WorkView::on_pushButton_clicked()
 {
     AddEvent ae;
     ae.setCurrentUser(ui->nameComboBox->currentText());
+    ae.setDate(ui->dateEdit->date());
     ae.exec();
     updateActivites();
 }

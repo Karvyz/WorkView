@@ -18,6 +18,7 @@ public:
     ~AddEvent();
 
     void setCurrentUser(QString user);
+    void setDate(QDate date);
 
 private slots:
     void on_buttonBox_accepted();
@@ -27,6 +28,7 @@ private:
     DbService* dbService;
 
     QString currentUser;
+    QDate date;
 
     void setUpProducts();
     void setUpActions();
