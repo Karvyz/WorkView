@@ -7,6 +7,7 @@ WorkView::WorkView(QWidget *parent)
     , ui(new Ui::WorkView)
 {
     ui->setupUi(this);
+    ui->dateEdit->setDate(QDate::currentDate());
     updateUsers();
     updateActivites();
 }
@@ -28,7 +29,7 @@ void WorkView::updateActivites()
 //        ui->listWidget->setItemWidget(test, activity);
 //    }
     ui->treeWidget->clear();
-    std::vector<Activity> activities = dbService->getActivities(ui->nameComboBox->currentText());
+    std::vector<Activity> activities = dbService->getActivities(ui->nameComboBox->currentText(), ui->dateEdit->date());
     for (auto activity : activities)
     {
         QTreeWidgetItem* item = new QTreeWidgetItem(ui->treeWidget);
@@ -79,6 +80,12 @@ void WorkView::on_actionAjouter_un_utilisateur_triggered()
 
 
 void WorkView::on_nameComboBox_currentTextChanged(const QString &arg1)
+{
+    updateActivites();
+}
+
+
+void WorkView::on_dateEdit_userDateChanged(const QDate &date)
 {
     updateActivites();
 }

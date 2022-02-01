@@ -21,7 +21,7 @@ private:
 public:
     DbService();
     std::vector<Activity> getActivities();
-    std::vector<Activity> getActivities(QString user);
+    std::vector<Activity> getActivities(QString user, QDate date);
     std::vector<QString> getProducts();
     std::vector<QString> getActions();
     std::vector<QString> getUsers();

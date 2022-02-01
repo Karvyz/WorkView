@@ -69,7 +69,7 @@ void DbService::tablesCreation()
 }
 
 
-std::vector<Activity> DbService::getActivities(QString user)
+std::vector<Activity> DbService::getActivities(QString user, QDate date)
 {
     qDebug() << user;
     QSqlQuery query;
@@ -77,8 +77,10 @@ std::vector<Activity> DbService::getActivities(QString user)
                   " join Users on userID=Users.ID"
                   " join Products on productID=Products.ID"
                   " join Actions on actionID=Actions.ID"
-                  " where Users.name = :name");
+                  " where Users.name = :name"
+                  " and Activities.date = :date");
     query.bindValue(":name", user);
+    query.bindValue(":date", date.toString("yyyy-MM-dd"));
     query.exec();
     std::vector<Activity> data;
     while (query.next())

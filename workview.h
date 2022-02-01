@@ -36,6 +36,8 @@ private slots:
 
     void on_nameComboBox_currentTextChanged(const QString &arg1);
 
+    void on_dateEdit_userDateChanged(const QDate &date);
+
 private:
     Ui::WorkView *ui;
     DbService* dbService;
