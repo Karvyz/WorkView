@@ -18,7 +18,6 @@ DbService::DbService()
     }
 
     QString dbPath = appDataLocation + "/data.db";
-    qDebug() << "dbPath" << dbPath;
 
     db.setDatabaseName(dbPath);
     if (!db.open())
@@ -71,7 +70,6 @@ void DbService::tablesCreation()
 
 std::vector<Activity> DbService::getActivities(QString user, QDate date)
 {
-    qDebug() << user;
     QSqlQuery query;
     query.prepare("select Activities.ID,startTime,endTime,Products.name,Actions.name from Activities"
                   " join Users on userID=Users.ID"
@@ -158,7 +156,6 @@ void DbService::addAction(QString name)
 }
 void DbService::addEvent(QString userName, QDate date, QString productName, QString actionName, QTime startTime, QTime endTime)
 {
-    qDebug() << endTime;
     QSqlQuery query;
     query.prepare("INSERT INTO Activities(userID, date, productID, actionID, startTime, endTime)"
                   " VALUES((SELECT ID FROM Users WHERE name= :userName),"
@@ -177,4 +174,12 @@ void DbService::addEvent(QString userName, QDate date, QString productName, QStr
     if (query.lastError().isValid()){
         qWarning() << "add event" << query.lastError().text();
     }
+}
+
+void DbService::removeEvent(uint ID)
+{
+    QSqlQuery query;
+    query.prepare("DELETE FROM ACTIVITIES WHERE ID= :ID");
+    query.bindValue(":ID", ID);
+    query.exec();
 }

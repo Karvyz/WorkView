@@ -1,6 +1,5 @@
 #include "workview.h"
-#include "ui_workview.h"
-#include <iostream>
+
 
 WorkView::WorkView(QWidget *parent)
     : QMainWindow(parent)
@@ -19,16 +18,8 @@ WorkView::~WorkView()
 
 void WorkView::updateActivites()
 {
-//    ui->listWidget->clear();
-//    //std::vector<Activity*> activities = dbService->getActivities();
-//    std::vector<Activity*> activities = dbService->getActivities(ui->nameComboBox->currentText());
-//    for (auto activity : activities)
-//    {
-//        QListWidgetItem* test = new QListWidgetItem();
-//        ui->listWidget->addItem(test);
-//        ui->listWidget->setItemWidget(test, activity);
-//    }
-    ui->treeWidget->clear();
+    if (ui->treeWidget->topLevelItemCount() != 0)
+        ui->treeWidget->clear();
     std::vector<Activity> activities = dbService->getActivities(ui->nameComboBox->currentText(), ui->dateEdit->date());
     for (auto activity : activities)
     {
@@ -46,15 +37,6 @@ void WorkView::updateUsers()
     ui->nameComboBox->clear();
     for (auto user : users)
         ui->nameComboBox->addItem(user);
-}
-
-void WorkView::on_pushButton_clicked()
-{
-    AddEvent ae;
-    ae.setCurrentUser(ui->nameComboBox->currentText());
-    ae.setDate(ui->dateEdit->date());
-    ae.exec();
-    updateActivites();
 }
 
 
@@ -88,6 +70,36 @@ void WorkView::on_nameComboBox_currentTextChanged(const QString &arg1)
 
 void WorkView::on_dateEdit_userDateChanged(const QDate &date)
 {
+    updateActivites();
+}
+
+void WorkView::on_addEventButton_clicked()
+{
+    AddEvent ae;
+    ae.setCurrentUser(ui->nameComboBox->currentText());
+    ae.setDate(ui->dateEdit->date());
+    ae.exec();
+    updateActivites();
+}
+
+
+void WorkView::on_removeEventButton_clicked()
+{
+    if (ui->treeWidget->currentItem() == nullptr)
+        return;
+    QTreeWidgetItem* item = ui->treeWidget->currentItem();
+    std::vector<Activity> activities = dbService->getActivities(ui->nameComboBox->currentText(), ui->dateEdit->date());
+    for (auto activity : activities)
+    {
+        if (activity.getProduct() == item->text(0)
+                && activity.getAction() == item->text(1)
+                && activity.getStartTime() == item->text(2)
+                && activity.getEndTime() == item->text(3))
+        {
+            dbService->removeEvent(activity.getID());
+        }
+
+    }
     updateActivites();
 }
 

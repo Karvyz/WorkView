@@ -31,6 +31,8 @@ public:
     void addProduct(QString name);
     void addAction(QString name);
     void addEvent(QString userName, QDate date, QString productName, QString actionName, QTime startTime, QTime endTime);
+
+    void removeEvent(uint ID);
 };
 
 #endif // DBSERVICE_H

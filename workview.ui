@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>835</width>
-    <height>627</height>
+    <width>603</width>
+    <height>443</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -115,21 +115,14 @@
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
-          <widget class="QPushButton" name="pushButton">
+          <widget class="QPushButton" name="addEventButton">
            <property name="text">
             <string>Ajouter évenement</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_3">
-           <property name="text">
-            <string>Modifier évènement</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButton_2">
+          <widget class="QPushButton" name="removeEventButton">
            <property name="text">
             <string>Supprimer évènement</string>
            </property>
@@ -147,7 +140,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>835</width>
+     <width>603</width>
      <height>21</height>
     </rect>
    </property>

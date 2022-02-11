@@ -1,6 +1,8 @@
 #ifndef WORKVIEW_H
 #define WORKVIEW_H
 
+#include "ui_workview.h"
+
 #include <QMainWindow>
 
 #include "dbservice.h"
@@ -26,8 +28,6 @@ public:
     void updateActivites();
 
 private slots:
-    void on_pushButton_clicked();
-
     void on_actionAjouter_un_produit_triggered();
 
     void on_actionAjouter_une_action_triggered();
@@ -37,6 +37,10 @@ private slots:
     void on_nameComboBox_currentTextChanged(const QString &arg1);
 
     void on_dateEdit_userDateChanged(const QDate &date);
+
+    void on_addEventButton_clicked();
+
+    void on_removeEventButton_clicked();
 
 private:
     Ui::WorkView *ui;
