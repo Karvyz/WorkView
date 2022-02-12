@@ -1,8 +1,9 @@
 #include "activity.h"
 
-Activity::Activity(uint ID, QString productName, QString actionName, QTime startTime, QTime endTime) : ID(ID),
+Activity::Activity(uint ID, QString productName, QString actionName, double quantity, QTime startTime, QTime endTime) : ID(ID),
     productName(productName),
     actionName(actionName),
+    quantity(quantity),
     startTime(startTime),
     endTime(endTime)
 {
@@ -20,6 +21,10 @@ QString Activity::getProduct()
 QString Activity::getAction()
 {
     return actionName;
+}
+double Activity::getQuantity()
+{
+    return quantity;
 }
 QString Activity::getStartTime()
 {

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>408</width>
-    <height>104</height>
+    <width>626</width>
+    <height>142</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -44,6 +44,24 @@
        </item>
        <item>
         <widget class="QComboBox" name="actionComboBox"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_5">
+       <item>
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>Quantité (optionnel)</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QDoubleSpinBox" name="quantitySpinBox">
+         <property name="maximum">
+          <double>999999.989999999990687</double>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>

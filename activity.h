@@ -8,17 +8,19 @@
 class Activity
 {
 public:
-    Activity(uint ID, QString productName, QString actionName, QTime startTime, QTime endTime);
+    Activity(uint ID, QString productName, QString actionName, double quantity, QTime startTime, QTime endTime);
 
     uint getID();
     QString getProduct();
     QString getAction();
+    double getQuantity();
     QString getStartTime();
     QString getEndTime();
 private:
     uint ID;
     QString productName;
     QString actionName;
+    double quantity;
     QTime startTime;
     QTime endTime;
 };

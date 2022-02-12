@@ -42,11 +42,23 @@ void AddEvent::setUpActions()
 
 void AddEvent::on_buttonBox_accepted()
 {
-   dbService->addEvent(currentUser,
-                       date,
-                       ui->productComboBox->currentText(),
-                       ui->actionComboBox->currentText(),
-                       ui->startTimeEdit->time(),
-                       ui->endTimeEdit->time());
+    if (ui->quantitySpinBox->value() == 0)
+    {
+        dbService->addEvent(currentUser,
+                            date,
+                            ui->productComboBox->currentText(),
+                            ui->actionComboBox->currentText(),
+                            ui->startTimeEdit->time(),
+                            ui->endTimeEdit->time());
+    }
+    else {
+        dbService->addEvent(currentUser,
+                            date,
+                            ui->productComboBox->currentText(),
+                            ui->actionComboBox->currentText(),
+                            ui->startTimeEdit->time(),
+                            ui->endTimeEdit->time(),
+                            ui->quantitySpinBox->value());
+    }
 }
 

@@ -28,65 +28,59 @@ DbService::DbService()
     tablesCreation();
 }
 
-QSqlQuery DbService::runQuery(QString queryString)
-{
-    QSqlQuery query;
-    query.exec(queryString);
-
-    if (query.lastError().isValid()){
-        qWarning() << "CREATE TABLE" << query.lastError().text();
-    }
-    return query;
-}
-
 void DbService::tablesCreation()
 {
-    QString tableUsers = "CREATE TABLE IF NOT EXISTS Users("
-                         "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-                         "name STRING NOT NULL UNIQUE)";
-    runQuery(tableUsers);
+    QSqlQuery createTableUsers("CREATE TABLE IF NOT EXISTS Users("
+                               "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
+                               "name STRING NOT NULL UNIQUE)");
+    createTableUsers.exec();
 
-    QString createTableProducts = "CREATE TABLE IF NOT EXISTS Products("
+    QSqlQuery createTableProducts("CREATE TABLE IF NOT EXISTS Products("
                                   "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-                                  "name STRING NOT NULL UNIQUE)";
-    runQuery(createTableProducts);
+                                  "name STRING NOT NULL UNIQUE)");
+    createTableProducts.exec();
 
-    QString createTableActions = "CREATE TABLE IF NOT EXISTS Actions("
+
+    QSqlQuery createTableActions("CREATE TABLE IF NOT EXISTS Actions("
                                  "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-                                 "name STRING NOT NULL UNIQUE)";
-    runQuery(createTableActions);
+                                 "name STRING NOT NULL UNIQUE)");
+    createTableActions.exec();
 
-    QString createTableActivities = "CREATE TABLE IF NOT EXISTS Activities("
+    QSqlQuery createTableActivities("CREATE TABLE IF NOT EXISTS Activities("
                                     "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
                                     "userID INT NOT NULL REFERENCES Users(ID),"
                                     "productID INT NOT NULL REFERENCES Products(ID),"
                                     "actionID INT NOT NULL REFERENCES Actions(ID),"
                                     "date DATE DEFAULT CURRENT_DATE,"
                                     "startTime TIME NOT NULL,"
-                                    "endTime TIME NOT NULL)";
-    runQuery(createTableActivities);
+                                    "endTime TIME NOT NULL,"
+                                    "quantity FLOAT)");
+    createTableActivities.exec();
+
+    QSqlQuery alterTableActivities("ALTER TABLE Activities ADD quantity FLOAT");
+    alterTableActivities.exec();
 }
 
 
 std::vector<Activity> DbService::getActivities(QString user, QDate date)
 {
     QSqlQuery query;
-    query.prepare("select Activities.ID,startTime,endTime,Products.name,Actions.name from Activities"
-                  " join Users on userID=Users.ID"
-                  " join Products on productID=Products.ID"
-                  " join Actions on actionID=Actions.ID"
-                  " where Users.name = :name"
-                  " and Activities.date = :date");
+    query.prepare("SELECT Activities.ID,startTime,endTime,Products.name,Actions.name,quantity FROM Activities"
+                  " JOIN Users ON userID=Users.ID"
+                  " JOIN Products ON productID=Products.ID"
+                  " JOIN Actions ON actionID=Actions.ID"
+                  " WHERE Users.name = :name"
+                  " AND Activities.date = :date");
     query.bindValue(":name", user);
     query.bindValue(":date", date.toString("yyyy-MM-dd"));
     query.exec();
     std::vector<Activity> data;
     while (query.next())
     {
-
         Activity temp(query.value("Activities.ID").toUInt(),
                       query.value("Products.name").toString(),
                       query.value("Actions.name").toString(),
+                      query.value("quantity").toDouble(),
                       QTime::fromString(query.value("startTime").toString(), "hh:mm:ss"),
                       QTime::fromString(query.value("endTime").toString(), "hh:mm:ss"));
         data.push_back(temp);
@@ -96,8 +90,8 @@ std::vector<Activity> DbService::getActivities(QString user, QDate date)
 }
 
 std::vector<QString> DbService::getProducts(){
-    QString activitiesQuery = "select name from Products";
-    QSqlQuery query = runQuery(activitiesQuery);
+    QSqlQuery query("SELECT name FROM Products");
+    query.exec();
     std::vector<QString> data;
     while (query.next())
     {
@@ -108,8 +102,8 @@ std::vector<QString> DbService::getProducts(){
 
 std::vector<QString> DbService::getActions()
 {
-    QString activitiesQuery = "select name from Actions";
-    QSqlQuery query = runQuery(activitiesQuery);
+    QSqlQuery query("SELECT name FROM Actions");
+    query.exec();
     std::vector<QString> data;
     while (query.next())
     {
@@ -120,8 +114,8 @@ std::vector<QString> DbService::getActions()
 
 std::vector<QString> DbService::getUsers()
 {
-    QString activitiesQuery = "select name from Users";
-    QSqlQuery query = runQuery(activitiesQuery);
+    QSqlQuery query("SELECT name FROM Users");
+    query.exec();
     std::vector<QString> data;
     while (query.next())
     {
@@ -170,6 +164,29 @@ void DbService::addEvent(QString userName, QDate date, QString productName, QStr
     query.bindValue(":actionName", actionName);
     query.bindValue(":startTime", startTime.toString("hh:mm:ss"));
     query.bindValue(":endTime", endTime.toString("hh:mm:ss"));
+    query.exec();
+    if (query.lastError().isValid()){
+        qWarning() << "add event" << query.lastError().text();
+    }
+}
+void DbService::addEvent(QString userName, QDate date, QString productName, QString actionName, QTime startTime, QTime endTime, double quantity)
+{
+    QSqlQuery query;
+    query.prepare("INSERT INTO Activities(userID, date, productID, actionID, startTime, endTime, quantity)"
+                  " VALUES((SELECT ID FROM Users WHERE name= :userName),"
+                  ":date,"
+                  "(SELECT ID FROM Products WHERE name= :productName),"
+                  "(SELECT ID FROM Actions WHERE name= :actionName),"
+                  ":startTime,"
+                  ":endTime,"
+                  ":quantity)");
+    query.bindValue(":userName", userName);
+    query.bindValue(":date", date.toString("yyyy-MM-dd"));
+    query.bindValue(":productName", productName);
+    query.bindValue(":actionName", actionName);
+    query.bindValue(":startTime", startTime.toString("hh:mm:ss"));
+    query.bindValue(":endTime", endTime.toString("hh:mm:ss"));
+    query.bindValue(":quantity", quantity);
     query.exec();
     if (query.lastError().isValid()){
         qWarning() << "add event" << query.lastError().text();

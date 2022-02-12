@@ -15,7 +15,6 @@
 class DbService
 {
 private:
-    QSqlQuery runQuery(QString queryString);
     void tablesCreation();
 
 public:
@@ -31,6 +30,7 @@ public:
     void addProduct(QString name);
     void addAction(QString name);
     void addEvent(QString userName, QDate date, QString productName, QString actionName, QTime startTime, QTime endTime);
+    void addEvent(QString userName, QDate date, QString productName, QString actionName, QTime startTime, QTime endTime, double quantity);
 
     void removeEvent(uint ID);
 };

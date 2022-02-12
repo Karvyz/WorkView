@@ -26,8 +26,10 @@ void WorkView::updateActivites()
         QTreeWidgetItem* item = new QTreeWidgetItem(ui->treeWidget);
         item->setText(0, activity.getProduct());
         item->setText(1, activity.getAction());
-        item->setText(2, activity.getStartTime());
-        item->setText(3, activity.getEndTime());
+        if (activity.getQuantity() != 0)
+            item->setText(2, QString::number(activity.getQuantity()));
+        item->setText(3, activity.getStartTime());
+        item->setText(4, activity.getEndTime());
     }
 }
 
@@ -93,8 +95,9 @@ void WorkView::on_removeEventButton_clicked()
     {
         if (activity.getProduct() == item->text(0)
                 && activity.getAction() == item->text(1)
-                && activity.getStartTime() == item->text(2)
-                && activity.getEndTime() == item->text(3))
+                && (QString::number(activity.getQuantity()) == item->text(2) || (activity.getQuantity() == 0 && item->text(2) == ""))
+                && activity.getStartTime() == item->text(3)
+                && activity.getEndTime() == item->text(4))
         {
             dbService->removeEvent(activity.getID());
         }
